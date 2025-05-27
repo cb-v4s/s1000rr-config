@@ -8,6 +8,7 @@ import React, {
 import Controls from "./Controls"; // Assuming this is your separate component
 
 interface ThreeDImageRotatorProps {
+  colors: string[];
   basePath: string; // e.g., '/images/my-object/'
   frameCount: number; // Total number of images
   imageExtension?: string; // e.g., 'jpg', 'png'
@@ -21,6 +22,7 @@ interface ThreeDImageRotatorProps {
 }
 
 export default function ThreeDImageRotator({
+  colors,
   basePath,
   frameCount,
   imageExtension = "png",
@@ -59,7 +61,7 @@ export default function ThreeDImageRotator({
 
   // Function to get the correct image path (converting internal 0-based to 1-based filename)
   const getImagePath = useCallback(
-    (internalIndex: number) => {
+    (internalIndex: number, basePath: string) => {
       const fileNameIndex = internalIndex + 1; // Convert 0-based to 1-based filename
       return `${basePath}${fileNameIndex}.${imageExtension}`;
     },
@@ -79,31 +81,33 @@ export default function ThreeDImageRotator({
         return;
       }
 
-      for (let i = 0; i < totalImages; i++) {
-        // Loop from 0 for consistency with getImagePath(i)
-        const img = new Image();
-        const imageUrl = getImagePath(i); // Use getImagePath for consistency
-        img.src = imageUrl;
+      for (let color of colors) {
+        for (let i = 0; i < totalImages; i++) {
+          // Loop from 0 for consistency with getImagePath(i)
+          const img = new Image();
+          const imageUrl = getImagePath(i, `/${color}/`); // Use getImagePath for consistency
+          img.src = imageUrl;
 
-        img.onload = () => {
-          loadedCount++;
-          if (loadedCount + erroredCount === totalImages) {
-            if (erroredCount === 0) {
-              res(); // All images loaded successfully
-            } else {
-              rej(new Error(`Failed to load ${erroredCount} images.`)); // Some images failed
+          img.onload = () => {
+            loadedCount++;
+            if (loadedCount + erroredCount === totalImages) {
+              if (erroredCount === 0) {
+                res(); // All images loaded successfully
+              } else {
+                rej(new Error(`Failed to load ${erroredCount} images.`)); // Some images failed
+              }
             }
-          }
-        };
+          };
 
-        img.onerror = (e) => {
-          erroredCount++;
-          console.error(`Failed to load image: ${imageUrl}`, e);
-          if (loadedCount + erroredCount === totalImages) {
-            // Even if errors, if all attempts are done, we resolve/reject
-            rej(new Error(`Failed to load ${erroredCount} images.`));
-          }
-        };
+          img.onerror = (e) => {
+            erroredCount++;
+            console.error(`Failed to load image: ${imageUrl}`, e);
+            if (loadedCount + erroredCount === totalImages) {
+              // Even if errors, if all attempts are done, we resolve/reject
+              rej(new Error(`Failed to load ${erroredCount} images.`));
+            }
+          };
+        }
       }
     });
   }, [frameCount, getImagePath]); // getImagePath is a dependency here
@@ -255,7 +259,7 @@ export default function ThreeDImageRotator({
               <img
                 key={idx}
                 // !!! CRITICAL FIX: Use idx for the image source, not currentInternalFrameIndex
-                src={getImagePath(idx)}
+                src={getImagePath(idx, basePath)}
                 alt={`Object Frame ${idx + 1}`}
                 className="w-full h-full object-fit absolute top-0 left-0 pointer-events-none" // Changed 'object-fit' to 'object-contain'
                 style={{

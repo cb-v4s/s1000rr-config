@@ -42,6 +42,7 @@ export default function Configurator({
       <div className="w-full lg:w-[65%] h-[320px] md:h-[480px] lg:h-[60vh] xl:h-[70vh] relative">
         {selectedColor && (
           <ThreeDImageRotator
+            colors={colors}
             basePath={`/${selectedColor}/`}
             frameCount={36}
             rotationSensitivity={6}
