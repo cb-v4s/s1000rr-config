@@ -25,7 +25,7 @@ export default function ThreeDImageRotator({
   colors,
   basePath,
   frameCount,
-  imageExtension = "png",
+  imageExtension = "webp",
   rotationSensitivity,
   display360,
   displayCockpit,
@@ -271,9 +271,9 @@ export default function ThreeDImageRotator({
           ) : (
             // Display Cockpit view
             <img
-              src={`${basePath}Cockpit.jpg`} // Assuming Cockpit.jpg is directly in basePath
+              src={`${basePath}Cockpit.${imageExtension}`} // Assuming Cockpit.jpg is directly in basePath
               alt={"Cockpit View"} // More descriptive alt text
-              className="w-full h-full object-contain pointer-events-none" // Changed 'object-fit' to 'object-contain'
+              className="w-full h-full pointer-events-none" // Changed 'object-fit' to 'object-contain'
             />
           )
         ) : (
