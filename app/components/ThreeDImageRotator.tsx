@@ -5,7 +5,7 @@ import React, {
   useCallback,
   Fragment,
 } from "react";
-import Controls from "./Controls"; // Assuming this is your separate component
+import Controls from "./Controls";
 
 interface ThreeDImageRotatorProps {
   colors: string[];
@@ -33,12 +33,12 @@ export default function ThreeDImageRotator({
   setDisplayCockpitActive,
 }: ThreeDImageRotatorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [currentInternalFrameIndex, setCurrentInternalFrameIndex] = useState(0); // Changed to 0 for initial frame consistency
+  const [currentInternalFrameIndex, setCurrentInternalFrameIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startClientX, setStartClientX] = useState(0);
   const [startInternalFrameIndex, setStartInternalFrameIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
-  const [loadingError, setLoadingError] = useState(false); // Added for error handling in UI
+  const [loadingError, setLoadingError] = useState(false);
 
   // Preload images by creating img tags and adding a src
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function ThreeDImageRotator({
         setStartInternalFrameIndex(currentInternalFrameIndex);
       }
     },
-    [currentInternalFrameIndex, imagesLoaded] // Added imagesLoaded as dependency
+    [currentInternalFrameIndex, imagesLoaded] 
   );
 
   const handleTouchStart = useCallback(
@@ -133,7 +133,7 @@ export default function ThreeDImageRotator({
         setStartInternalFrameIndex(currentInternalFrameIndex);
       }
     },
-    [currentInternalFrameIndex, imagesLoaded] // Added imagesLoaded as dependency
+    [currentInternalFrameIndex, imagesLoaded]
   );
 
   const handleMouseMove = useCallback(
@@ -160,7 +160,7 @@ export default function ThreeDImageRotator({
       startInternalFrameIndex,
       frameCount,
       rotationSensitivity,
-    ] // Added rotationSensitivity
+    ]
   );
 
   const handleTouchMove = useCallback(
@@ -188,7 +188,7 @@ export default function ThreeDImageRotator({
       startInternalFrameIndex,
       frameCount,
       rotationSensitivity,
-    ] // Added rotationSensitivity
+    ]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -253,18 +253,16 @@ export default function ThreeDImageRotator({
             Error loading images.
           </div>
         ) : imagesLoaded ? (
-          // Display 360-degree rotation
           display360 ? (
             Array.from({ length: frameCount }).map((_, idx) => (
               <img
                 key={idx}
-                // !!! CRITICAL FIX: Use idx for the image source, not currentInternalFrameIndex
                 src={getImagePath(idx, basePath)}
                 alt={`Object Frame ${idx + 1}`}
-                className="w-full h-full object-fit absolute top-0 left-0 pointer-events-none" // Changed 'object-fit' to 'object-contain'
+                className="w-full h-full object-fit absolute top-0 left-0 pointer-events-none"
                 style={{
                   opacity: currentInternalFrameIndex === idx ? 1 : 0,
-                  transition: "opacity 0s", // Instant switch
+                  transition: "opacity 0s",
                 }}
               />
             ))

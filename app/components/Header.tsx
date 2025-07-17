@@ -3,7 +3,7 @@ import { CircleAlert } from "./icons";
 export default function Header({ currentPrice }: { currentPrice: string }) {
   return (
     <div className="flex flex-col md:flex-row py-8 px-10">
-      <h1 className="text-xl md:text-4xl font-bold">2025 S1000RR</h1>
+      <h1 className="text-xl md:text-4xl font-black">2025 S1000RR</h1>
       <div className="flex md:ml-auto md:float-end">
         <div className="flex flex-col cursor-pointer mr-20">
           <div className="flex hover:text-blue-500">
